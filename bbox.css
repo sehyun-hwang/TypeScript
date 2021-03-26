@@ -1,0 +1,31 @@
+:root {
+  --default-box-border: red;
+}
+
+.flex-row {
+  display: flex;
+}
+.box {
+  width: 320px;
+  height: 240px;
+  max-width: 100%;
+  position: relative;
+  flex-shrink: 1;
+}
+.box img {
+  width: 100%;
+  height: 100%;
+}
+.box div {
+  position: absolute;
+  border: solid var(--default-box-border) 3px;
+  top: 10%;
+  bottom: 10%;
+  left: 10%;
+  right: 10%;
+}
+
+ .mix-blend {
+  color: var(--default-box-border);
+  mix-blend-mode: difference;
+}
