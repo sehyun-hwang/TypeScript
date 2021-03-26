@@ -1,5 +1,4 @@
-import * as CSS from "csstype";
-type CSSProperties = CSS.Properties;
+type CSSProperties = CSSStyleDeclaration;
 
 export interface BoxPayload {
   cctv: number;
