@@ -6,7 +6,7 @@ import "./style.css";
 import { fromEvent } from "rxjs";
 import { Observable } from "rxjs/Observable";
 import { map, filter } from "rxjs/operators";
-import { CustomElement, Watch, Prop } from 'custom-elements-ts';
+import { CustomElement, Watch, Prop } from "custom-elements-ts";
 // @ts-ignore
 import { io } from "socket.io-client";
 
@@ -47,17 +47,17 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(console.log);
 
 @CustomElement({
-  tag: 'cctv-bbox',
-  templateUrl: 'counter-element.html',
-  styleUrl: 'bbox.scss'
+  tag: "cctv-bbox",
+  templateUrl: "bbox.html",
+  styleUrl: "bbox.css"
 })
 class extends HTMLElement {
   event: Observable<any>;
   @Prop() src: string;
-  @Watch('src')
+
+  @Watch("src")
   srcChanged() {
     // trigger when color property color changes
     // either via property or attribute
   }
-
 }
