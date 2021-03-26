@@ -41,6 +41,12 @@ const socketio = (() => {
   return { subscribePayload };
 })();
 
+fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
+  .then(res => res.json())
+  .then(console.log);
+
+  
+
 class App extends HTMLDivElement {
   src: string;
 
@@ -72,4 +78,4 @@ class App extends HTMLDivElement {
   }
 }
 
-//render(<App />, document.getElementById("root"));
+customElements.define('cctv-bbox', ExpandingList, { extends: "ul" });
