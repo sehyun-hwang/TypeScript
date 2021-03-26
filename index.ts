@@ -45,15 +45,14 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(res => res.json())
   .then(console.log);
 
-  
-
-class App extends HTMLDivElement {
+class CCTVBBox extends HTMLDivElement {
   src: string;
 
   boxStates: AppState[];
 
   constructor() {
     super();
+    this.innerHTML = "foobar";
     socketio.subscribePayload(0);
   }
 
@@ -78,4 +77,4 @@ class App extends HTMLDivElement {
   }
 }
 
-customElements.define('cctv-bbox', ExpandingList, { extends: "ul" });
+customElements.define("cctv-bbox", CCTVBBox, { extends: "div" });
