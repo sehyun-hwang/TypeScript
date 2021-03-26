@@ -6,7 +6,7 @@ import "./style.css";
 import { fromEvent } from "rxjs";
 import { Observable } from "rxjs/Observable";
 import { map, filter } from "rxjs/operators";
-
+import { CustomElement } from 'custom-elements-ts';
 // @ts-ignore
 import { io } from "socket.io-client";
 
@@ -47,7 +47,7 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(console.log);
 
 
-import { CustomElement } from 'custom-elements-ts';
+
 
 @CustomElement({
   tag: 'cctv-bbox',
