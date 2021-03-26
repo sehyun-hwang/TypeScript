@@ -54,8 +54,7 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   //templateUrl: 'counter-element.html',
   //styleUrl: 'counter-element.scss'
 })
-
-class CCTVBBox extends HTMLElement   {
+export class extends HTMLElement   {
   boxStates: AppState[];
   event: Observable<any>;
 
