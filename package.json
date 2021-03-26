@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "@types/socket.io-client": "^1.4.36",
+    "@types/socket.io-client": "1.4.36",
     "csstype": "3.0.7",
-    "rxjs": "^6.6.6",
-    "socket.io-client": "^4.0.0"
+    "custom-elements-ts": "^0.0.16",
+    "rxjs": "6.6.6",
+    "socket.io-client": "4.0.0"
   }
 }

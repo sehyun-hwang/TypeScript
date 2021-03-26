@@ -94,5 +94,3 @@ class CCTVBBox extends HTMLElement   {
     );*/
   }
 }
-
-customElements.define(, CCTVBBox);
