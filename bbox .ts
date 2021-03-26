@@ -1,4 +1,5 @@
-import { Properties as CSSProperties } from "csstype";
+import * as CSS from "csstype";
+type CSSProperties = CSS.Properties;
 
 export interface BoxPayload {
   cctv: number;
