@@ -4,6 +4,7 @@ import { getMedia, getBox, AppState, BoxPayload } from "./Hello";
 import "./style.css";
 
 import { fromEvent } from "rxjs";
+import { Observable } from "rxjs/Observable";
 import { map, filter } from "rxjs/operators";
 
 // @ts-ignore
@@ -45,14 +46,14 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(res => res.json())
   .then(console.log);
 
-class CCTVBBox extends HTMLDivElement {
+class CCTVBBox extends HTMLElement {
   boxStates: AppState[];
+  event: Observable<any>;
 
   constructor() {
     super();
-    this.innerHTML = "foobar";
-    console.log("constrc");
-    socketio.subscribePayload(0);
+    this.event = socketio.subscribePayload(0);
+    setInterval(() => this.setAttribute("foo", Math.random().toString()), 1000);
   }
 
   connectedCallback() {
@@ -61,6 +62,10 @@ class CCTVBBox extends HTMLDivElement {
 
   disconnectedCallback() {
     console.log("Custom square element removed from page.");
+  }
+
+  attributeChangedCallback(...args) {
+    console.log(args);
   }
 
   render() {
@@ -76,5 +81,4 @@ class CCTVBBox extends HTMLDivElement {
   }
 }
 
-customElements.define("cctv-bbox", CCTVBBox, { extends: "div" });
-document.body.innerHTML = '<cctv-bbox cctvid="0"></cctv-bbox>';
+customElements.define("cctv-bbox", CCTVBBox);
