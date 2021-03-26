@@ -46,7 +46,16 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(res => res.json())
   .then(console.log);
 
-class CCTVBBox extends HTMLElement {
+
+import { CustomElement } from 'custom-elements-ts';
+
+@CustomElement({
+  tag: 'cctv-bbox',
+  //templateUrl: 'counter-element.html',
+  //styleUrl: 'counter-element.scss'
+})
+
+class CCTVBBox extends HTMLElement   {
   boxStates: AppState[];
   event: Observable<any>;
 
@@ -64,8 +73,13 @@ class CCTVBBox extends HTMLElement {
     console.log("Custom square element removed from page.");
   }
 
-  attributeChangedCallback(...args) {
-    console.log(args);
+
+  static get observedAttributes() {
+    return ['foo'];
+  }
+
+  attributeChangedCallback(attribute, prev, cur,a) {
+    console.log(attribute, prev, cur,a);
   }
 
   render() {
@@ -81,4 +95,4 @@ class CCTVBBox extends HTMLElement {
   }
 }
 
-customElements.define("cctv-bbox", CCTVBBox);
+customElements.define(, CCTVBBox);
