@@ -7,6 +7,7 @@ import { fromEvent } from "rxjs";
 import { Observable } from "rxjs/Observable";
 import { map, filter } from "rxjs/operators";
 import { CustomElement, Watch, Prop } from "custom-elements-ts";
+
 // @ts-ignore
 import { io } from "socket.io-client";
 
@@ -46,18 +47,43 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(res => res.json())
   .then(console.log);
 
-@CustomElement({
-  tag: "cctv-bbox",
-  templateUrl: "bbox.html",
-  styleUrl: "bbox.css"
-})
-class extends HTMLElement {
+class CCTVBBox extends HTMLElement   {
+  boxStates: AppState[];
   event: Observable<any>;
-  @Prop() src: string;
 
-  @Watch("src")
-  srcChanged() {
-    // trigger when color property color changes
-    // either via property or attribute
+  constructor() {
+    super();
+    this.event = socketio.subscribePayload(0);
+    setInterval(() => this.setAttribute("foo", Math.random().toString()), 1000);
+  }
+
+  connectedCallback() {
+    console.log("Custom square element added to page.");
+  }
+
+  disconnectedCallback() {
+    console.log("Custom square element removed from page.");
+  }
+
+
+  static get observedAttributes() {
+    return ['foo'];
+  }
+
+  attributeChangedCallback(attribute, prev, cur,a) {
+    console.log(attribute, prev, cur,a);
+  }
+
+  render() {
+    const { src } = this;
+    /*return this.state ? (
+      <div className="box">
+        {getMedia({ src })}
+        {this.boxStates.map(getBox)}
+      </div>
+    ) : (
+      <div />
+    );*/
   }
 }
+document.body.innerHTML ='<cctv-bbox/>'
