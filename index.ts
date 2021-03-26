@@ -1,12 +1,11 @@
 // Import stylesheets
 import "./style.css";
-import { getMedia, getBox, AppState, BoxPayload } from "./Hello";
+import { AppState, BoxPayload } from "./bbox";
 import "./style.css";
 
 import { fromEvent } from "rxjs";
 import { Observable } from "rxjs/Observable";
 import { map, filter } from "rxjs/operators";
-import { CustomElement, Watch, Prop } from "custom-elements-ts";
 
 // @ts-ignore
 import { io } from "socket.io-client";
@@ -47,14 +46,17 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(res => res.json())
   .then(console.log);
 
-class CCTVBBox extends HTMLElement   {
+class CCTVBBox extends HTMLElement {
   boxStates: AppState[];
+  video: HTMLVideoElement;
   event: Observable<any>;
+  boxes: HTMLDivElement[];
 
-  constructor() {
+  constructor(){
     super();
     this.event = socketio.subscribePayload(0);
-    setInterval(() => this.setAttribute("foo", Math.random().toString()), 1000);
+    //setInterval(() => this.setAttribute("src", Math.random().toString()), 1000);
+    return this;
   }
 
   connectedCallback() {
@@ -67,11 +69,16 @@ class CCTVBBox extends HTMLElement   {
 
 
   static get observedAttributes() {
-    return ['foo'];
+    return ['src'];
   }
 
-  attributeChangedCallback(attribute, prev, cur,a) {
-    console.log(attribute, prev, cur,a);
+  attributeChangedCallback(attribute, prev, cur) {
+    if (!cur)
+      return;
+    const video = document.createElement('video');
+    video.autoplay = true;
+    video.src = cur;
+    this.querySelector('img').replaceWith(video);
   }
 
   render() {
@@ -86,4 +93,5 @@ class CCTVBBox extends HTMLElement   {
     );*/
   }
 }
-document.body.innerHTML ='<cctv-bbox/>'
+
+customElements.define('cctv-bbox',CCTVBBox);
