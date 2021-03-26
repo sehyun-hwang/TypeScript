@@ -1,10 +1,10 @@
 // Import stylesheets
-import './style.css';
+import "./style.css";
 import { getMedia, getBox, AppState, BoxPayload } from "./Hello";
 import "./style.css";
 
 import { fromEvent } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, filter } from "rxjs/operators";
 
 // @ts-ignore
 import { io } from "socket.io-client";
@@ -13,41 +13,50 @@ interface AppProps {
   src?: string;
 }
 
-const socket = io("wss://proxy.hwangsehyun.com/webrtc-onvif", {
-  transports: ["websocket"]
-});
+const socketio = (() => {
+  const socket = io("wss://proxy.hwangsehyun.com/webrtc-onvif", {
+    transports: ["websocket"]
+  });
+  const boxEvent = fromEvent(socket, "box");
 
-const boxEvents = fromEvent(socket, "box");
+  const payloadEvent = boxEvent.pipe(
+    map(([id, payload]: [number, BoxPayload]) =>
+      payload.boxs.map(({ id, box, style = {} }) => {
+        Object.entries(box).forEach(
+          ([key, value]) => (style[key] = 100 * value + "%")
+        );
+
+        return {
+          id,
+          style,
+          comment: "Start editing to see some magic happen :)"
+        };
+      })
+    )
+  );
+
+  const subscribePayload = (_id: number) =>
+    payloadEvent.pipe(filter(({ id }) => id === _id));
+
+  return { subscribePayload };
+})();
 
 class App extends HTMLDivElement {
   src: string;
 
   boxStates: AppState[];
 
-  constructor(props) {
+  constructor() {
     super();
-    //events.subscribe(console.log);
+    socketio.subscribePayload(0);
+  }
 
-    const payloads = boxEvents.pipe(
-      map(([id, payload]: [number, BoxPayload]) =>
-        payload.boxs.map(({ id, box, style = {} }) => {
-          Object.entries(box).forEach(
-            ([key, value]) => (style[key] = 100 * value + "%")
-          );
+  connectedCallback() {
+    console.log("Custom square element added to page.");
+  }
 
-          return {
-            id,
-            style,
-            comment: "Start editing to see some magic happen :)"
-          };
-        })
-      )
-    );
-    payloads.subscribe(x => {
-      console.log(x);
-      this.boxStates = x;
-      //this.setState({});
-    });
+  disconnectedCallback() {
+    console.log("Custom square element removed from page.");
   }
 
   render() {
