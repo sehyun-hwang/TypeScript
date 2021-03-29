@@ -13,11 +13,11 @@ cctv-bbox {
   position: relative;
   flex-shrink: 1;
 }
-.bbox img {
+cctv-bbox img {
   width: 100%;
   height: 100%;
 }
-.bbox span {
+cctv-bbox div {
   position: absolute;
   border: solid var(--default-box-border) 3px;
   top: 10%;
@@ -26,7 +26,7 @@ cctv-bbox {
   right: 10%;
 }
 
- .mix-blend {
+.mix-blend {
   color: var(--default-box-border);
   mix-blend-mode: difference;
 }

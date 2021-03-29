@@ -51,7 +51,7 @@ class CCTVBBox extends HTMLElement {
   boxWrapper: HTMLDivElement;
   boxes: HTMLDivElement[];
   resolveDisconnect: VoidFunction;
-
+  defaultBorderColor: string;
   constructor() {
     super();
 
@@ -60,6 +60,10 @@ class CCTVBBox extends HTMLElement {
   }
 
   connectedCallback() {
+    this.defaultBorderColor = getComputedStyle(document.body).getPropertyValue(
+      "--default-box-border"
+    );
+    this.classList.add("mix-blend");
     this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`;
 
     const observableDisconnect = from(
@@ -73,12 +77,12 @@ class CCTVBBox extends HTMLElement {
       .pipe(takeUntil(observableDisconnect))
       .subscribe(this.renderBoxes.bind(this));
 
-    console.log("Custom square element added to page.");
+    console.log(this, "Connected");
   }
 
   disconnectedCallback() {
     this.resolveDisconnect();
-    console.log("Custom square element removed from page.");
+    console.log(this, "Disconnected");
   }
 
   static get observedAttributes() {
@@ -100,21 +104,16 @@ class CCTVBBox extends HTMLElement {
 
   renderBoxes(payload) {
     console.log(payload);
-    this.querySelectorAll(".bbox").forEach(x => x.remove());
+    this.querySelectorAll("div").forEach(x => x.remove());
 
     payload.forEach(({ id, style }) => {
-      const box = document.createElement("div");
-      box.classList.add("bbox");
-      Object.assign(box, { style });
-      box.innerHTML = `<span class="mix-blend">${id}</span>`;
-      this.appendChild(box);
+      const bbox = document.createElement("div");
+      Object.assign(bbox, { style });
+      bbox.innerHTML = `<span>${id}</span>`;
+      bbox.querySelector("span").style.background =
+        style.borderColor || this.defaultBorderColor;
+      this.appendChild(bbox);
     });
-
-    `<div class="box" style={style}>
-      <span style={{ background: style.borderColor || defaultBorderColor }}>
-        
-      </span>
-    </div>`;
   }
 }
 
