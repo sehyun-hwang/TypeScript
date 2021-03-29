@@ -26,6 +26,10 @@ cctv-bbox div {
   right: 10%;
 }
 
+cctv-bbox span {
+  color: white;
+}
+
 .mix-blend {
   color: var(--default-box-border);
   mix-blend-mode: difference;
