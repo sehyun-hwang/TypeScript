@@ -20,24 +20,25 @@ const socketio = (() => {
   });
   const boxEvent = fromEvent(socket, "box");
 
-  const boxPayloadEvent = boxEvent.pipe(
-    map(([id, payload]: [number, BoxPayload]) =>
-      payload.boxs.map(({ id, box, style = {} }) => {
-        Object.entries(box).forEach(
-          ([key, value]) => (style[key] = 100 * value + "%")
-        );
+  const boxPayloadMap = map(([id, payload]: [number, BoxPayload]) =>
+    payload.boxs.map(({ id, box, style = {} }) => {
+      Object.entries(box).forEach(
+        ([key, value]) => (style[key] = 100 * value + "%")
+      );
 
-        return {
-          id,
-          style,
-          comment: "Start editing to see some magic happen :)"
-        };
-      })
-    )
+      return {
+        id,
+        style,
+        comment: "Start editing to see some magic happen :)"
+      };
+    })
   );
 
   const boxPayloadObservable = (_id: number) =>
-    boxPayloadEvent.pipe(filter(({ id }) => id === _id));
+    boxEvent.pipe(
+      filter(([id, payload]: [number, BoxPayload]) => _id === id),
+      boxPayloadMap
+    );
   return { boxPayloadObservable };
 })();
 
@@ -70,8 +71,8 @@ class CCTVBBox extends HTMLElement {
 
     socketio
       .boxPayloadObservable(Number(this.getAttribute("cctvid")))
-      .pipe(takeUntil(observableDisconnect))
-      .subscribe(console.log);
+      //.pipe(takeUntil(observableDisconnect))
+      .subscribe(payload => payload.forEach());
 
     console.log("Custom square element added to page.");
   }
@@ -98,15 +99,12 @@ class CCTVBBox extends HTMLElement {
     this.srcCallback(cur);
   }
 
-  render() {
-    /*return this.state ? (
-      <div className="box">
-        {getMedia({ src })}
-        {this.boxStates.map(getBox)}
-      </div>
-    ) : (
-      <div />
-    );*/
+  renderBoxes() {
+    `<div style={style}>
+      <span style={{ background: style.borderColor || defaultBorderColor }}>
+        <span class="mix-blend">${id}</span>
+      </span>
+    </div>`;
   }
 }
 
