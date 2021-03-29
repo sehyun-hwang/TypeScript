@@ -1,7 +1,6 @@
 // Import stylesheets
-import "./style.css";
+import "./bbox.css";
 import { AppState, BoxPayload } from "./bbox";
-import "./style.css";
 
 import { Observable, fromEvent, from, OperatorFunction } from "rxjs";
 import { map, filter, takeUntil } from "rxjs/operators";
@@ -49,7 +48,7 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
 class CCTVBBox extends HTMLElement {
   boxStates: AppState[];
   video: HTMLVideoElement;
-  event: Observable<any>;
+  boxWrapper: HTMLDivElement;
   boxes: HTMLDivElement[];
   resolveDisconnect: VoidFunction;
 
@@ -61,7 +60,10 @@ class CCTVBBox extends HTMLElement {
   }
 
   connectedCallback() {
-    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`;
+    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />
+    <div class="box"></div>`;
+    this.boxWrapper = document.querySelector('.box');
+
 
     const observableDisconnect = from(
       new Promise(resolve => {
@@ -72,7 +74,7 @@ class CCTVBBox extends HTMLElement {
     socketio
       .boxPayloadObservable(Number(this.getAttribute("cctvid")))
       .pipe(takeUntil(observableDisconnect))
-      .subscribe(payload => payload.forEach(this.renderBoxes.bind(this)));
+      .subscribe(this.renderBoxes.bind(this));
 
     console.log("Custom square element added to page.");
   }
@@ -99,10 +101,22 @@ class CCTVBBox extends HTMLElement {
     this.srcCallback(cur);
   }
 
-  renderBoxes() {
-    `<div style={style}>
+  renderBoxes(payload) {
+    console.log(payload);
+const {boxWrapper}  =this;
+    boxWrapper.querySelectorAll(".mix-blend").forEach(x => x.remove());
+
+    payload.forEach(({ id, style }) => {
+      const box = document.createElement("div");
+      box.classList.add("mix-blend");
+      Object.assign(box, style);
+      box.innerHTML = `<span class="mix-blend">${id}</span>`;
+      boxWrapper.appendChild(box);
+    });
+
+    `<div class="box" style={style}>
       <span style={{ background: style.borderColor || defaultBorderColor }}>
-        <span class="mix-blend">${id}</span>
+        
       </span>
     </div>`;
   }
