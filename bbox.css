@@ -6,11 +6,12 @@
   display: flex;
 }
 cctv-bbox {
+  max-width: 100%;
+  position: relative;
   display: inline-block;
   width: 320px;
   height: 240px;
-  max-width: 100%;
-  position: relative;
+
   flex-shrink: 1;
 }
 cctv-bbox img,
@@ -21,10 +22,6 @@ cctv-bbox video {
 cctv-bbox div {
   position: absolute;
   border: solid var(--default-box-border) 3px;
-  top: 10%;
-  bottom: 10%;
-  left: 10%;
-  right: 10%;
 }
 
 cctv-bbox span {

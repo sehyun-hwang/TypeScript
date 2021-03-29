@@ -76,7 +76,7 @@ export class CCTVBBox extends HTMLElement {
       .boxPayloadObservable(Number(this.getAttribute("cctvid")))
       .pipe(takeUntil(observableDisconnect))
       .subscribe(this.renderBoxes.bind(this));
-    setTimeout(() => this.setAttribute("src", "foo"), 0);
+    //setTimeout(() => this.setAttribute("src", "foo"), 0);
 
     console.log(this, "Connected");
   }
@@ -111,7 +111,7 @@ export class CCTVBBox extends HTMLElement {
 
     payload.forEach(({ id, style }) => {
       const bbox = document.createElement("div");
-      Object.assign(bbox, { style });
+      Object.assign(bbox.style, style);
       bbox.innerHTML = `<span>${id}</span>`;
       bbox.querySelector("span").style.background =
         style.borderColor || this.defaultBorderColor;
