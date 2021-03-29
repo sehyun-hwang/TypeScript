@@ -3,12 +3,12 @@ import "./style.css";
 import { AppState, BoxPayload } from "./bbox";
 import "./style.css";
 
-import { fromEvent } from "rxjs";
-import { Observable } from "rxjs/Observable";
-import { map, filter } from "rxjs/operators";
+import { Observable, fromEvent, from, OperatorFunction } from "rxjs";
+import { map, filter, takeUntil } from "rxjs/operators";
 
 // @ts-ignore
 import { io } from "socket.io-client";
+import { VendorLonghandProperties } from "csstype";
 
 interface AppProps {
   src?: string;
@@ -20,7 +20,7 @@ const socketio = (() => {
   });
   const boxEvent = fromEvent(socket, "box");
 
-  const payloadEvent = boxEvent.pipe(
+  const boxPayloadEvent = boxEvent.pipe(
     map(([id, payload]: [number, BoxPayload]) =>
       payload.boxs.map(({ id, box, style = {} }) => {
         Object.entries(box).forEach(
@@ -36,10 +36,9 @@ const socketio = (() => {
     )
   );
 
-  const subscribePayload = (_id: number) =>
-    payloadEvent.pipe(filter(({ id }) => id === _id));
-
-  return { subscribePayload };
+  const boxPayloadObservable = (_id: number) =>
+    boxPayloadEvent.pipe(filter(({ id }) => id === _id));
+  return { boxPayloadObservable };
 })();
 
 fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
@@ -51,18 +50,29 @@ class CCTVBBox extends HTMLElement {
   video: HTMLVideoElement;
   event: Observable<any>;
   boxes: HTMLDivElement[];
+  resolveDisconnect: VoidFunction;
 
-  constructor(){
+  constructor() {
     super();
+
     //setInterval(() => this.setAttribute("src", Math.random().toString()), 1000);
     return this;
   }
 
   connectedCallback() {
-    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`
+    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`;
 
-    this.event = socketio.subscribePayload(Number(this.getAttribute('cctvid')));
-    this.event.subscribe()
+    const observableDisconnect = from(
+      new Promise(resolve => {
+        this.resolveDisconnect = resolve;
+      })
+    );
+
+    socketio
+      .boxPayloadObservable(Number(this.getAttribute("cctvid")))
+      .pipe(takeUntil(observableDisconnect))
+      .subscribe(console.log);
+
     console.log("Custom square element added to page.");
   }
 
@@ -70,27 +80,22 @@ class CCTVBBox extends HTMLElement {
     console.log("Custom square element removed from page.");
   }
 
-
   static get observedAttributes() {
-    return ['src'];
+    return ["src"];
   }
 
-
   srcCallback(src) {
-    const video = document.createElement('video');
+    const video = document.createElement("video");
     video.autoplay = true;
     video.src = src;
-    this.querySelector('img').replaceWith(video);
+    this.querySelector("img").replaceWith(video);
   }
 
   attributeChangedCallback(attribute, prev, cur) {
-    if (!cur)
-      return;
+    if (!cur) return;
 
     this.srcCallback(cur);
   }
-
-
 
   render() {
     /*return this.state ? (
@@ -104,5 +109,4 @@ class CCTVBBox extends HTMLElement {
   }
 }
 
-customElements.define('cctv-bbox',CCTVBBox);
-
+customElements.define("cctv-bbox", CCTVBBox);
