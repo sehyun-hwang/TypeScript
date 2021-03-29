@@ -54,12 +54,14 @@ class CCTVBBox extends HTMLElement {
 
   constructor(){
     super();
-    this.event = socketio.subscribePayload(0);
     //setInterval(() => this.setAttribute("src", Math.random().toString()), 1000);
     return this;
   }
 
   connectedCallback() {
+    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`
+
+    this.event = socketio.subscribePayload(0);
     console.log("Custom square element added to page.");
   }
 
@@ -72,17 +74,24 @@ class CCTVBBox extends HTMLElement {
     return ['src'];
   }
 
-  attributeChangedCallback(attribute, prev, cur) {
-    if (!cur)
-      return;
+
+  srcCallback() {
     const video = document.createElement('video');
     video.autoplay = true;
     video.src = cur;
     this.querySelector('img').replaceWith(video);
   }
 
+  attributeChangedCallback(attribute, prev, cur) {
+    if (!cur)
+      return;
+
+    this.srcCallback(src);
+  }
+
+
+
   render() {
-    const { src } = this;
     /*return this.state ? (
       <div className="box">
         {getMedia({ src })}
@@ -95,3 +104,4 @@ class CCTVBBox extends HTMLElement {
 }
 
 customElements.define('cctv-bbox',CCTVBBox);
+
