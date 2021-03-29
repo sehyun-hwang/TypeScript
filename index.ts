@@ -61,7 +61,8 @@ class CCTVBBox extends HTMLElement {
   connectedCallback() {
     this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`
 
-    this.event = socketio.subscribePayload(0);
+    this.event = socketio.subscribePayload(Number(this.getAttribute('cctvid')));
+    this.event.subscribe()
     console.log("Custom square element added to page.");
   }
 
@@ -75,10 +76,10 @@ class CCTVBBox extends HTMLElement {
   }
 
 
-  srcCallback() {
+  srcCallback(src) {
     const video = document.createElement('video');
     video.autoplay = true;
-    video.src = cur;
+    video.src = src;
     this.querySelector('img').replaceWith(video);
   }
 
@@ -86,7 +87,7 @@ class CCTVBBox extends HTMLElement {
     if (!cur)
       return;
 
-    this.srcCallback(src);
+    this.srcCallback(cur);
   }
 
 

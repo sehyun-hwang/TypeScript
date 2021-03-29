@@ -12,7 +12,7 @@ export interface BoxPayload {
         left: number;
         right: number;
       };
-      style?: CSSProperties;
+      style?: {[prop in keyof CSSProperties]?: string};
       comment?: string;
     }
   ];
