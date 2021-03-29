@@ -1,7 +1,7 @@
 // Import stylesheets
 import "./bbox.css";
 import { AppState, BoxPayload } from "./bbox";
-
+import { app } from "./app";
 import { Observable, fromEvent, from, OperatorFunction } from "rxjs";
 import { map, filter, takeUntil } from "rxjs/operators";
 
@@ -45,7 +45,7 @@ fetch("https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json")
   .then(res => res.json())
   .then(console.log);
 
-class CCTVBBox extends HTMLElement {
+export class CCTVBBox extends HTMLElement {
   boxStates: AppState[];
   video: HTMLVideoElement;
   boxWrapper: HTMLDivElement;
@@ -60,6 +60,7 @@ class CCTVBBox extends HTMLElement {
   }
 
   connectedCallback() {
+    app(this.querySelector("video"));
     this.defaultBorderColor = getComputedStyle(document.body).getPropertyValue(
       "--default-box-border"
     );
@@ -116,5 +117,8 @@ class CCTVBBox extends HTMLElement {
     });
   }
 }
+
+
+
 
 customElements.define("cctv-bbox", CCTVBBox);
