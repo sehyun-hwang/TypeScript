@@ -13,7 +13,8 @@ cctv-bbox {
   position: relative;
   flex-shrink: 1;
 }
-cctv-bbox img {
+cctv-bbox img,
+cctv-bbox video {
   width: 100%;
   height: 100%;
 }

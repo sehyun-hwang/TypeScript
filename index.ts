@@ -1,7 +1,7 @@
 // Import stylesheets
 import "./bbox.css";
 import { AppState, BoxPayload } from "./bbox";
-import { app } from "./app";
+import app from "./app";
 import { Observable, fromEvent, from, OperatorFunction } from "rxjs";
 import { map, filter, takeUntil } from "rxjs/operators";
 
@@ -60,7 +60,6 @@ export class CCTVBBox extends HTMLElement {
   }
 
   connectedCallback() {
-    app(this.querySelector("video"));
     this.defaultBorderColor = getComputedStyle(document.body).getPropertyValue(
       "--default-box-border"
     );
@@ -77,6 +76,7 @@ export class CCTVBBox extends HTMLElement {
       .boxPayloadObservable(Number(this.getAttribute("cctvid")))
       .pipe(takeUntil(observableDisconnect))
       .subscribe(this.renderBoxes.bind(this));
+    setTimeout(() => this.setAttribute("src", "foo"), 0);
 
     console.log(this, "Connected");
   }
@@ -91,10 +91,12 @@ export class CCTVBBox extends HTMLElement {
   }
 
   srcCallback(src) {
+    console.log("srcCallback", src);
     const video = document.createElement("video");
     video.autoplay = true;
-    video.src = src;
+    //video.src = src;
     this.querySelector("img").replaceWith(video);
+    app(video);
   }
 
   attributeChangedCallback(attribute, prev, cur) {
@@ -117,8 +119,5 @@ export class CCTVBBox extends HTMLElement {
     });
   }
 }
-
-
-
 
 customElements.define("cctv-bbox", CCTVBBox);

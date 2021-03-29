@@ -12,7 +12,7 @@ let CONFIG = {
 const DEBUG = false;
 const CAMERA_CNT = 4;
 
-export function app(videoElem, suuid) {
+function app(videoElem, suuid) {
   const stream = new MediaStream();
   let sendChannel;
 
