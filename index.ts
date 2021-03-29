@@ -60,10 +60,7 @@ class CCTVBBox extends HTMLElement {
   }
 
   connectedCallback() {
-    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />
-    <div class="box"></div>`;
-    this.boxWrapper = document.querySelector('.box');
-
+    this.innerHTML = `<img src="https://i2-prod.belfastlive.co.uk/incoming/article13722455.ece/ALTERNATES/s615/1PNG.png" />`;
 
     const observableDisconnect = from(
       new Promise(resolve => {
@@ -103,15 +100,14 @@ class CCTVBBox extends HTMLElement {
 
   renderBoxes(payload) {
     console.log(payload);
-const {boxWrapper}  =this;
-    boxWrapper.querySelectorAll(".mix-blend").forEach(x => x.remove());
+    this.querySelectorAll(".bbox").forEach(x => x.remove());
 
     payload.forEach(({ id, style }) => {
       const box = document.createElement("div");
-      box.classList.add("mix-blend");
-      Object.assign(box, style);
+      box.classList.add("bbox");
+      Object.assign(box, { style });
       box.innerHTML = `<span class="mix-blend">${id}</span>`;
-      boxWrapper.appendChild(box);
+      this.appendChild(box);
     });
 
     `<div class="box" style={style}>
