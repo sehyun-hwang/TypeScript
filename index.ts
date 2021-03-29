@@ -71,8 +71,8 @@ class CCTVBBox extends HTMLElement {
 
     socketio
       .boxPayloadObservable(Number(this.getAttribute("cctvid")))
-      //.pipe(takeUntil(observableDisconnect))
-      .subscribe(payload => payload.forEach());
+      .pipe(takeUntil(observableDisconnect))
+      .subscribe(payload => payload.forEach(this.renderBoxes.bind(this)));
 
     console.log("Custom square element added to page.");
   }
