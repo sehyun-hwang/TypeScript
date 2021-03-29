@@ -77,6 +77,7 @@ class CCTVBBox extends HTMLElement {
   }
 
   disconnectedCallback() {
+    this.resolveDisconnect();
     console.log("Custom square element removed from page.");
   }
 
