@@ -55,6 +55,7 @@ export class CCTVBBox extends HTMLElement {
   boxes: HTMLDivElement[];
   resolveDisconnect: VoidFunction;
   defaultBorderColor: string;
+  timestamp: number;
   constructor() {
     super();
 
@@ -109,6 +110,10 @@ export class CCTVBBox extends HTMLElement {
   }
 
   renderBoxes(payload) {
+    if (this.timestamp) {
+      console.log(Date.now() - this.timestamp);
+      this.timestamp = Date.now();
+    }
     console.log(payload);
     this.querySelectorAll("div").forEach(x => x.remove());
 
