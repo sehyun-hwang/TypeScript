@@ -15,8 +15,6 @@ cctv-bbox {
   position: relative;
   display: inline-block;
   width: 320px;
-  height: 240px;
-
   flex-shrink: 1;
 }
 cctv-bbox img,
