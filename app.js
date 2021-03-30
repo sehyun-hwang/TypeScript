@@ -1,6 +1,6 @@
 const WEBRTC = "https://apigateway-http.beyondwork.co.kr/gpu/stream";
 const RTC_JSON = "https://www.hwangsehyun.com/webrtc-onvif/webrtc/config.json";
-let CONFIG = {
+const CONFIG = {
   iceServers: [
     {
       urls: []
@@ -95,33 +95,21 @@ function app(videoElem, suuid) {
       });
 }
 
-function getVideoStreams() {
-  const req_config = {
-    method: "GET"
-  };
-  return new Promise((resolve, reject) => {
-    fetch(RTC_JSON, req_config)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          reject("failed");
-        }
-      })
-      .then(resData => {
-        let data = resData;
-        const iceServers = data.server.ice_servers;
-        const streams = Object.keys(data.streams);
-        console.log(streams);
-        iceServers.forEach(url => {
-          CONFIG.iceServers[0].urls.push(url);
-        });
-        streams.forEach(stream => {
-          CONFIG.streams.push(stream);
-        });
-        resolve("Done");
+const getVideoStreams = () =>
+  fetch(RTC_JSON)
+    .then(async res => (res.ok ? res.json() : Promise.reject(await res.text())))
+    .then(resData => {
+      let data = resData;
+      const iceServers = data.server.ice_servers;
+      const streams = Object.keys(data.streams);
+      console.log(streams);
+      iceServers.forEach(url => {
+        CONFIG.iceServers[0].urls.push(url);
       });
-  });
-}
+      streams.forEach(stream => {
+        CONFIG.streams.push(stream);
+      });
+    })
+    .then(console.error);
 
 export default element => getVideoStreams().then(() => app(element, "test"));
