@@ -23,7 +23,7 @@ function app(videoElem, suuid) {
     console.log(videoElem, stream);
     videoElem.srcObject = stream;
   };
-  pc.oniceconnectionstatechange = console.log;
+  pc.oniceconnectionstatechange = console.warn;
 
   pc.addEventListener("iceconnectionstatechange", event => {
     pc.oniceconnectionstatechange = function(evt) {
